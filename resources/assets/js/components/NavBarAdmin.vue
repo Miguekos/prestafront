@@ -122,32 +122,18 @@
 
 <script>
     export default {
+        props: ['user'],
         data() {
             return {
                 drawer: null,
                 mini: false,
                 right: null,
-                user: "",
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             }
         },
         created() {
-            this.getData();
         },
         methods: {
-            getData: function (n) {
-                //                this.dialog = true;
-                axios
-                    .get(`/v1.0/usuario`)
-                    .then(response => {
-                        // JSON responses are automatically parsed.
-                        this.user = response.data;
-                        console.log(response.data);
-                    })
-                    .catch(e => {
-                        this.errors.push(e);
-                    });
-            },
             logout: function () {
                 console.log("entro a al logout");
                 //                this.dialog = true;

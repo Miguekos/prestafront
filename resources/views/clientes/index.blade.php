@@ -5,7 +5,7 @@
         <div id="sombra" class="col-md-12">
             <div class="panel panel-default">
 
-                    <cliente></cliente>
+                    <cliente :user="{{ auth()->user() }}"></cliente>
 
             </div>
         </div>
@@ -16,7 +16,7 @@
         <div id="sombra" class="col-md-12">
             <div class="panel panel-default">
 
-                <cliente-sd></cliente-sd>
+                <cliente-sd :user="{{ auth()->user() }}"></cliente-sd>
 
             </div>
         </div>

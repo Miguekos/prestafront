@@ -355,68 +355,49 @@
             console.log(formDa);
             console.log("SE PRECIONO");
         },
-        sendForm3 (e) {
-          if (this.editedIndex > -1) {
+        sendForm3(e) {
                 alert('Nuusdfsdevo Form')
-                // let token = this.csrf
+                let token = this.csrf
                 axios.defaults.headers.common['Content-Type'] = 'application/json'
                 axios.defaults.headers.common['Authorization'] = 'Basic ' + this.csrf
                 console.log(this.csrf);
                 let form = document.getElementById('ContactForm'),
-                formData = new FormData(form)
-                console.log("entro a editar");
-                // console.log(formData);
-                console.log(this.idedit);
-            // axios.put(`/v1.0/cliente/${this.idedit}`,formData)
-            //     .then(response => {
-            //         console.log(response)
-            //     })
-            //     .catch(error => {
-            //         console.log(error)
-            //     })
-            axios({
-                method: 'put',
-                url: `/v1.0/cliente/${this.idedit}`,
-                data: 
-                formData,
-                })
-                .then(function (response) {
-                    response.data
-                    console.log(response.data);
-                    });
-                    
-                    console.log("aqu esatamosmof");
-                // this.close()
-            }else{
-                  alert('Nuevo Form')
-            let form = document.getElementById('ContactForm'),
-                formData = new FormData(form)
-
-            axios.post('/v1.0/cliente',formData)
-                .then(response => {
-                    console.log(response)
-                    this.getDataCliente();
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-            }
-            this.close();
-        },
-        editForm (e) {
-                alert('Editar Form')
-            let form = document.getElementById('ContactForm'),
-                formData = new FormData(form)
+                    formData = new FormData(form)
                 console.log("entro a editar");
                 console.log(formData);
-            axios.patch(`/v1.0/cliente/${id}`,formData)
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
+                console.log(this.idedit);
+                axios.put(`/v1.0/cliente/${this.idedit}`, formData)
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                axios({
+                        method: 'put',
+                        url: `/v1.0/cliente/${this.idedit}`,
+                        data: formData,
+                    })
+                    .then(function (response) {
+                        response.data
+                        console.log(response.data);
+                    });
+                this.close();
+            },
+            editForm(e) {
+                alert('Editar Form')
+                let form = document.getElementById('ContactForm'),
+                    formData = new FormData(form)
+                console.log("entro a editar");
+                console.log(formData);
+                axios.patch(`/v1.0/cliente/${id}`, formData)
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
         deleteCliente: function (id) {
             console.log("entro a al borrar");
 //                this.dialog = true;

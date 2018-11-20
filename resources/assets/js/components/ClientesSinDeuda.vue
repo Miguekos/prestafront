@@ -85,6 +85,7 @@
     import moment from "moment";
 
     export default {
+        props: ['user'],
         data() {
             return {
                 loading4: false,

@@ -56,8 +56,8 @@
                                                 <label for="prestamo">Prestamo</label>
                                                 <input type="number" class="form-control" v-model="editedItem.prestamo"
                                                     onkeyup="calcular()" id="prestamo" name="prestamo" placeholder="">
-                                                <input type="hidden" class="form-control" v-model="editedItem.deuda" id="deuda" name="deuda"
-                                                    placeholder="">
+                                                <input type="hidden" class="form-control" v-model="editedItem.deuda" id="deuda"
+                                                    name="deuda" placeholder="">
                                             </div>
 
                                             <div class="form-group col-md-6">
@@ -68,8 +68,8 @@
 
                                             <div class="form-group col-md-6">
                                                 <label for="">Monto a Pagar</label>
-                                                <input type="text" class="form-control" v-model="editedItem.monto_a_apagar" readonly name="monto_a_apagar"
-                                                    id="total" placeholder="">
+                                                <input type="text" class="form-control" v-model="editedItem.monto_a_apagar"
+                                                    readonly name="monto_a_apagar" id="total" placeholder="">
                                             </div>
 
                                             <div class="form-group col-md-6">
@@ -81,9 +81,9 @@
 
                                             <div class="form-group col-md-6">
                                                 <label for="">Pago por dia</label>
-                                                <input type="text" class="form-control" readonly id="totaldias" v-model="editedItem.pago_dia" name="pago_dia"
-                                                    placeholder="">
-                                                    
+                                                <input type="text" class="form-control" readonly id="totaldias" v-model="editedItem.pago_dia"
+                                                    name="pago_dia" placeholder="">
+
                                             </div>
 
                                         </div>
@@ -109,10 +109,10 @@
                                             <!-- <v-btn @click="createdFormData">create</v-btn> -->
 
                                         </div>
-                                        <!-- <input type="hidden" name="agregado" v-model="agregado" value="user.name"> -->
+                                        <input type="hidden" name="agregado" v-model="agregado" value="user.name">
                                         <input type="hidden" name="agregado_id" v-model="agregado_id" value="user.id">
                                         <input type="hidden" name="abono_id" v-model="editedItem.abono_id" value="0">
-                                        
+
                                     </form>
 
                                 </div>
@@ -121,7 +121,7 @@
                     </template>
 
                     <!--<v-card-text>-->
-                   
+
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -129,9 +129,9 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-          
+
         </v-toolbar>
-        
+
         <v-data-table :headers="headers" :items="desserts" class="elevation-1" :search="search" :rows-per-page-items="[5,10,20]">
 
             <template slot="items" slot-scope="props">
@@ -166,9 +166,9 @@
 
 <script>
     export default {
+        props: ['user'],
         data: () => ({
             errors: [],
-            user: "",
             agregado: "",
             agregado_id: "",
             mirar: "",
@@ -224,7 +224,7 @@
                 "comentario": null,
                 "agregado": null,
                 "agregado_id": null,
-                "_token" : this.csrf,
+                "_token": this.csrf,
             },
             defaultItem: {
                 "nombre": "",
@@ -241,8 +241,8 @@
                 "fecha_limite": null,
                 "abono_id": null,
                 "comentario": null,
-                "_token" : this.csrf,
-                },
+                "_token": this.csrf,
+            },
         }),
 
         computed: {
@@ -263,23 +263,8 @@
         created() {
             //      this.initialize()
             this.getDataCliente();
-            this.getUser();
-          
         },
         methods: {
-            getUser: function (n) {
-                //                this.dialog = true;
-                axios
-                    .get(`/v1.0/usuario`)
-                    .then(response => {
-                        // JSON responses are automatically parsed.
-                        this.user = response.data;
-                        console.log(response.data);
-                    })
-                    .catch(e => {
-                        this.errors.push(e);
-                    });
-            },
             getDataCliente: function (n) {
                 //  this.dialog = true;
                 axios
@@ -340,6 +325,7 @@
                         .then(function (response) {
                             response.data
                             console.log(response.data);
+                            this.getDataCliente();
                         });
 
                 } else {
@@ -353,98 +339,10 @@
                         .then(function (response) {
                             response.data
                             console.log(response.data);
-                        });
-                    // axios.post('/v1.0/cliente', this.defaultItem)
-                    //     .then(response => {
-                    //         console.log(response)
-                    //         alert("ya guardo");
-                    //         // this.getDataCliente();
-                    //     })
-                    //     .catch(error => {
-                    //         console.log(error)
-                    //     })
-                    //   this.desserts.push(this.editedItem)
-                    //   console.log(this.editedItem);
-                }
-                // this.close()
-            },
-            sendForm() {
-                axios.put(`/v1.0/cliente/${this.idedit}`, this.createdFormData())
-                    .then((response) => {
-                        // this.resultado = response.data
-                        console.log(response.data);
-                    })
-            },
-            createdFormData: function () {
-                console.log("SE PRECIONO aqiooooioi");
-                var formDa = new FormData();
-                for (var key in this.objeto) {
-                    formDa.append(key, this.objeto[key]);
-                }
-                return formDa;
-                console.log(formDa);
-                console.log("SE PRECIONO");
-            },
-            sendForm3(e) {
-                if (this.editedIndex > -1) {
-                    alert('Nuusdfsdevo Form')
-                    // let token = this.csrf
-                    axios.defaults.headers.common['Content-Type'] = 'application/json'
-                    axios.defaults.headers.common['Authorization'] = 'Basic ' + this.csrf
-                    console.log(this.csrf);
-                    let form = document.getElementById('ContactForm'),
-                        formData = new FormData(form)
-                    console.log("entro a editar");
-                    // console.log(formData);
-                    console.log(this.idedit);
-                    // axios.put(`/v1.0/cliente/${this.idedit}`,formData)
-                    //     .then(response => {
-                    //         console.log(response)
-                    //     })
-                    //     .catch(error => {
-                    //         console.log(error)
-                    //     })
-                    axios({
-                            method: 'put',
-                            url: `/v1.0/cliente/${this.idedit}`,
-                            data: formData,
-                        })
-                        .then(function (response) {
-                            response.data
-                            console.log(response.data);
-                        });
-
-                    console.log("aqu esatamosmof");
-                    // this.close()
-                } else {
-                    alert('Nuevo Form')
-                    let form = document.getElementById('ContactForm'),
-                        formData = new FormData(form)
-
-                    axios.post('/v1.0/cliente', formData)
-                        .then(response => {
-                            console.log(response)
                             this.getDataCliente();
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        })
+                        });
                 }
-                this.close();
-            },
-            editForm(e) {
-                alert('Editar Form')
-                let form = document.getElementById('ContactForm'),
-                    formData = new FormData(form)
-                console.log("entro a editar");
-                console.log(formData);
-                axios.patch(`/v1.0/cliente/${id}`, formData)
-                    .then(response => {
-                        console.log(response)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+                this.close()
             },
             deleteCliente: function (id) {
                 console.log("entro a al borrar");
@@ -478,7 +376,6 @@
         from {
             transform: rotate(0);
         }
-
         to {
             transform: rotate(360deg);
         }
@@ -488,7 +385,6 @@
         from {
             transform: rotate(0);
         }
-
         to {
             transform: rotate(360deg);
         }
@@ -498,7 +394,6 @@
         from {
             transform: rotate(0);
         }
-
         to {
             transform: rotate(360deg);
         }
@@ -508,7 +403,6 @@
         from {
             transform: rotate(0);
         }
-
         to {
             transform: rotate(360deg);
         }
