@@ -160,7 +160,7 @@
             <!--<v-btn color="primary" @click="getDataCliente">Reset</v-btn>-->
             <!--</template>-->
         </v-data-table>
-        <pre>{{ $data }}</pre>
+        <!-- <pre>{{ $data }}</pre> -->
     </div>
 </template>
 
