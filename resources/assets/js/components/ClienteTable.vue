@@ -104,17 +104,14 @@
                             >
                                 Guardar
                             </v-btn> -->
-                                        
-                                            
-                                            
-                                            
+
                                             <v-btn color="green darken-1" dark @click="save">Save</v-btn>
                                             <v-btn color="red darken-1" dark @click.native="close">Cancel</v-btn>
 
                                             <!-- <v-btn @click="createdFormData">create</v-btn> -->
 
                                         </div>
-                                        
+
                                         <input type="hidden" name="agregado" v-model="agregado" value="user.name">
                                         <input type="hidden" name="agregado_id" v-model="agregado_id" value="user.id">
                                         <input type="hidden" name="abono_id" v-model="abono_id" value="0">
