@@ -22,7 +22,7 @@
                             <div class="row">
                                 <div id="sombra" class="col-md-12">
                                     <form id="ContactForm" class="ContactForm" @submit="save">
-                                        
+
                                         <div class="form-group">
                                             <div class="form-group col-md-6">
                                                 <label for="nombre">Nombre</label>
@@ -115,10 +115,10 @@
 
                                         </div>
                                         
-                                        <input type="text" name="agregado" v-model="agregado" value="user.name">
-                                        <input type="text" name="agregado_id" v-model="agregado_id" value="user.id">
-                                        <input type="text" name="abono_id" v-model="abono_id" value="0">
-                                        <input type="text" name="_token" v-model="csrf" value="token">
+                                        <input type="hidden" name="agregado" v-model="agregado" value="user.name">
+                                        <input type="hidden" name="agregado_id" v-model="agregado_id" value="user.id">
+                                        <input type="hidden" name="abono_id" v-model="abono_id" value="0">
+                                        <input type="hidden" name="_token" v-model="csrf" value="token">
 
                                     </form>
 
