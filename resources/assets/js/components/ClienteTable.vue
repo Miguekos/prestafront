@@ -1,7 +1,8 @@
 <template>
     <div>
         <v-toolbar flat color="white">
-            <v-toolbar-title>Clientes</v-toolbar-title>
+            <v-toolbar-title>Clientes {{ user.name }} </v-toolbar-title>
+            <!-- <v-text-field label="Regular"></v-text-field> -->
             <!-- <v-btn @click="createdFormData">create</v-btn> -->
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-text-field append-icon="search" label="Buscar" single-line hide-details v-model="search"></v-text-field>
@@ -20,12 +21,13 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div id="sombra" class="col-md-12">
-                                    <form>
+                                    <form id="ContactForm" class="ContactForm" @submit="save">
+                                        
                                         <div class="form-group">
                                             <div class="form-group col-md-6">
                                                 <label for="nombre">Nombre</label>
-                                                <input type="text" class="form-control" v-model="editedItem.nombre"
-                                                    autofocus name="nombre" placeholder="">
+                                                <input type="text" name="nombre" class="form-control" v-model="editedItem.nombre"
+                                                    autofocus placeholder="">
                                             </div>
 
                                             <div class="form-group col-md-6">
@@ -102,16 +104,21 @@
                             >
                                 Guardar
                             </v-btn> -->
-
+                                        
+                                            
+                                            
+                                            
                                             <v-btn color="green darken-1" dark @click="save">Save</v-btn>
                                             <v-btn color="red darken-1" dark @click.native="close">Cancel</v-btn>
 
                                             <!-- <v-btn @click="createdFormData">create</v-btn> -->
 
                                         </div>
-                                        <input type="hidden" name="agregado" v-model="agregado" value="user.name">
-                                        <input type="hidden" name="agregado_id" v-model="agregado_id" value="user.id">
-                                        <input type="hidden" name="abono_id" v-model="editedItem.abono_id" value="0">
+                                        
+                                        <input type="text" name="agregado" v-model="agregado" value="user.name">
+                                        <input type="text" name="agregado_id" v-model="agregado_id" value="user.id">
+                                        <input type="text" name="abono_id" v-model="abono_id" value="0">
+                                        <input type="text" name="_token" v-model="csrf" value="token">
 
                                     </form>
 
@@ -171,6 +178,7 @@
             errors: [],
             agregado: "",
             agregado_id: "",
+            abono_id: "",
             mirar: "",
             idedit: "",
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -220,16 +228,12 @@
                 "dias_para_pagar": null,
                 "pago_dia": null,
                 "fecha_limite": null,
-                "abono_id": null,
                 "comentario": null,
-                "agregado": null,
-                "agregado_id": null,
-                "_token": this.csrf,
             },
             defaultItem: {
                 "nombre": "",
                 "dni": "",
-                "direccion": "",
+                "direccion": null,
                 "fecha": "",
                 "telf": "",
                 "prestamo": null,
@@ -239,13 +243,21 @@
                 "dias_para_pagar": null,
                 "pago_dia": null,
                 "fecha_limite": null,
-                "abono_id": null,
                 "comentario": null,
-                "_token": this.csrf,
             },
+            props: {
+                // user_name: String,
+                // likes: Number,
+                // isPublished: Boolean,
+                // commentIds: Array,
+                // author: Object
+                }
         }),
 
         computed: {
+            getPr () {
+                return this.user.name;
+            },
             formTitle() {
                 return this.editedIndex === -1 ? 'Nuevo Cliente' : 'Editar Cliente'
             },
@@ -253,7 +265,13 @@
                 return this.editedIndex === -1 ? 'sendForm' : 'editForm'
             }
         },
-
+        mounted() {
+            const tidValue = this.user.name // get the value of props you've passed
+            this.agregado = this.user.id
+            this.agregado_id = this.user.id
+            this.abono_id = 0
+            console.log(tidValue) // check if it is getting the right value.
+        },
         watch: {
             dialog(val) {
                 val || this.close()
@@ -263,6 +281,7 @@
         created() {
             //      this.initialize()
             this.getDataCliente();
+
         },
         methods: {
             getDataCliente: function (n) {
@@ -325,24 +344,65 @@
                         .then(function (response) {
                             response.data
                             console.log(response.data);
-                            this.getDataCliente();
+                            
                         });
 
                 } else {
                     // nuevo
                     // console.log(this.editedItem);
-                    axios({
+                    // this.editedItem = Object.assign({}, this.agregar)
+                    console.log(this.editedItem);
+                    let form = document.getElementById('ContactForm'),
+                        formData = new FormData(form)
+                        console.log(formData);
+
+                        axios({
+                            url: '/v1.0/cliente/',
                             method: 'post',
-                            url: `/v1.0/cliente`,
-                            data: this.editedItem,
+                            headers: {
+                            'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                            },
+                            data: formData
                         })
                         .then(function (response) {
                             response.data
                             console.log(response.data);
-                            this.getDataCliente();
                         });
+                        this.getDataCliente();
+                        this.close();
+                    // const nuevo = axios.create({
+                    //     method: 'post',
+                    //     baseURL: '/v1.0/cliente/',
+                    //     timeout: 1000,
+                    //     headers: {
+                    //         'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                    //     },
+                    //     data: formData
+                    // });
+
+                    // console.log(nuevo.data);
+                    
+                    
+                    // axios.post(`/v1.0/cliente/`, formData)
+                    //     .then(response => {
+                    //         console.log(response)
+                    //     })
+                    //     .catch(error => {
+                    //         console.log(error)
+                    //     })
+
+                    // axios({
+                    //         method: 'post',
+                    //         url: `/v1.0/cliente`,
+                    //         data: this.editedItem,
+                    //     })
+                    //     .then(function (response) {
+                    //         response.data
+                    //         console.log(response.data);
+                    //         this.getDataCliente();
+                    //     });
                 }
-                this.close()
+                // this.close()
             },
             deleteCliente: function (id) {
                 console.log("entro a al borrar");
@@ -376,6 +436,7 @@
         from {
             transform: rotate(0);
         }
+
         to {
             transform: rotate(360deg);
         }
@@ -385,6 +446,7 @@
         from {
             transform: rotate(0);
         }
+
         to {
             transform: rotate(360deg);
         }
@@ -394,6 +456,7 @@
         from {
             transform: rotate(0);
         }
+
         to {
             transform: rotate(360deg);
         }
@@ -403,6 +466,7 @@
         from {
             transform: rotate(0);
         }
+
         to {
             transform: rotate(360deg);
         }

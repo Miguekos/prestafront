@@ -42,7 +42,8 @@ class ClienteController extends Controller
 
     public function indexapi()
     {
-        $cliente = Cliente::where('deuda','!=',0.00)->get();
+        // $cliente = Cliente::where('deuda','!=',0.00)->get();
+        $cliente = Cliente::all();
         $clientesd = Cliente::where('deuda',0.00)->get();
 //        $user = Auth::user();
 //        return view('clientes.index',compact('cliente','clientesd','user'));
@@ -86,10 +87,13 @@ class ClienteController extends Controller
     public function storeapi(Request $request)
     {
         $cliente = Cliente::create($request->all());
+        return $cliente;
+
         // $flight = Cliente::find($control);
         // $flight->deuda = $flight->deuda + $cliente->abono;
 //        return redirect()->route('cliente.index')->with('success','Se guardo correctammente el cliente');
-        return $cliente;
+        
+        // return $request->all();
     }
 
     /**

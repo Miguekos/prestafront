@@ -84436,8 +84436,13 @@ module.exports = function listToStyles (parentId, list) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var _this = this;
-
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -84612,6 +84617,7 @@ var _this = this;
             errors: [],
             agregado: "",
             agregado_id: "",
+            abono_id: "",
             mirar: "",
             idedit: "",
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -84655,16 +84661,12 @@ var _this = this;
                 "dias_para_pagar": null,
                 "pago_dia": null,
                 "fecha_limite": null,
-                "abono_id": null,
-                "comentario": null,
-                "agregado": null,
-                "agregado_id": null,
-                "_token": _this.csrf
+                "comentario": null
             },
             defaultItem: {
                 "nombre": "",
                 "dni": "",
-                "direccion": "",
+                "direccion": null,
                 "fecha": "",
                 "telf": "",
                 "prestamo": null,
@@ -84674,20 +84676,35 @@ var _this = this;
                 "dias_para_pagar": null,
                 "pago_dia": null,
                 "fecha_limite": null,
-                "abono_id": null,
-                "comentario": null,
-                "_token": _this.csrf
+                "comentario": null
+            },
+            props: {
+                // user_name: String,
+                // likes: Number,
+                // isPublished: Boolean,
+                // commentIds: Array,
+                // author: Object
             }
         };
     },
 
     computed: {
+        getPr: function getPr() {
+            return this.user.name;
+        },
         formTitle: function formTitle() {
             return this.editedIndex === -1 ? 'Nuevo Cliente' : 'Editar Cliente';
         },
         envio: function envio() {
             return this.editedIndex === -1 ? 'sendForm' : 'editForm';
         }
+    },
+    mounted: function mounted() {
+        var tidValue = this.user.name; // get the value of props you've passed
+        this.agregado = this.user.id;
+        this.agregado_id = this.user.id;
+        this.abono_id = 0;
+        console.log(tidValue); // check if it is getting the right value.
     },
 
     watch: {
@@ -84703,15 +84720,15 @@ var _this = this;
 
     methods: {
         getDataCliente: function getDataCliente(n) {
-            var _this2 = this;
+            var _this = this;
 
             //  this.dialog = true;
             axios.get("/v1.0/clientes").then(function (response) {
                 // JSON responses are automatically parsed.
-                _this2.desserts = response.data.cliente;
+                _this.desserts = response.data.cliente;
                 console.log(response.data.cliente);
             }).catch(function (e) {
-                _this2.errors.push(e);
+                _this.errors.push(e);
             });
         },
         editItem: function editItem(item) {
@@ -84738,12 +84755,12 @@ var _this = this;
             });
         },
         close: function close() {
-            var _this3 = this;
+            var _this2 = this;
 
             this.dialog = false;
             setTimeout(function () {
-                _this3.editedItem = Object.assign({}, _this3.defaultItem);
-                _this3.editedIndex = -1;
+                _this2.editedItem = Object.assign({}, _this2.defaultItem);
+                _this2.editedIndex = -1;
             }, 300);
         },
         save: function save() {
@@ -84758,22 +84775,62 @@ var _this = this;
                 }).then(function (response) {
                     response.data;
                     console.log(response.data);
-                    this.getDataCliente();
                 });
             } else {
                 // nuevo
                 // console.log(this.editedItem);
+                // this.editedItem = Object.assign({}, this.agregar)
+                console.log(this.editedItem);
+                var form = document.getElementById('ContactForm'),
+                    formData = new FormData(form);
+                console.log(formData);
+
                 axios({
+                    url: '/v1.0/cliente/',
                     method: 'post',
-                    url: "/v1.0/cliente",
-                    data: this.editedItem
+                    headers: {
+                        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                    },
+                    data: formData
                 }).then(function (response) {
                     response.data;
                     console.log(response.data);
-                    this.getDataCliente();
                 });
+                this.getDataCliente();
+                this.close();
+                // const nuevo = axios.create({
+                //     method: 'post',
+                //     baseURL: '/v1.0/cliente/',
+                //     timeout: 1000,
+                //     headers: {
+                //         'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                //     },
+                //     data: formData
+                // });
+
+                // console.log(nuevo.data);
+
+
+                // axios.post(`/v1.0/cliente/`, formData)
+                //     .then(response => {
+                //         console.log(response)
+                //     })
+                //     .catch(error => {
+                //         console.log(error)
+                //     })
+
+                // axios({
+                //         method: 'post',
+                //         url: `/v1.0/cliente`,
+                //         data: this.editedItem,
+                //     })
+                //     .then(function (response) {
+                //         response.data
+                //         console.log(response.data);
+                //         this.getDataCliente();
+                //     });
             }
-            this.close();
+            // this.close()
         },
 
         deleteCliente: function deleteCliente(id) {
@@ -84809,7 +84866,9 @@ var render = function() {
         "v-toolbar",
         { attrs: { flat: "", color: "white" } },
         [
-          _c("v-toolbar-title", [_vm._v("Clientes")]),
+          _c("v-toolbar-title", [
+            _vm._v("Clientes " + _vm._s(_vm.user.name) + " ")
+          ]),
           _vm._v(" "),
           _c("v-divider", {
             staticClass: "mx-4",
@@ -84880,584 +84939,626 @@ var render = function() {
                           "div",
                           { staticClass: "col-md-12", attrs: { id: "sombra" } },
                           [
-                            _c("form", [
-                              _c("div", { staticClass: "form-group" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "nombre" } }, [
-                                      _vm._v("Nombre")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.nombre,
-                                          expression: "editedItem.nombre"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "text",
-                                        autofocus: "",
-                                        name: "nombre",
-                                        placeholder: ""
-                                      },
-                                      domProps: {
-                                        value: _vm.editedItem.nombre
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "nombre",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "telf" } }, [
-                                      _vm._v("DNI")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.dni,
-                                          expression: "editedItem.dni"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "text",
-                                        name: "dni",
-                                        placeholder: ""
-                                      },
-                                      domProps: { value: _vm.editedItem.dni },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "dni",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c(
-                                      "label",
-                                      { attrs: { for: "direccion" } },
-                                      [_vm._v("Direccion")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.direccion,
-                                          expression: "editedItem.direccion"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "text",
-                                        name: "direccion",
-                                        placeholder: ""
-                                      },
-                                      domProps: {
-                                        value: _vm.editedItem.direccion
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "direccion",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "fecha" } }, [
-                                      _vm._v("Fecha")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.fecha,
-                                          expression: "editedItem.fecha"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "date",
-                                        name: "fecha",
-                                        pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}",
-                                        value: "",
-                                        id: "fecha"
-                                      },
-                                      domProps: { value: _vm.editedItem.fecha },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "fecha",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "dni" } }, [
-                                      _vm._v("Telf")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.telf,
-                                          expression: "editedItem.telf"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "text",
-                                        name: "telf",
-                                        placeholder: ""
-                                      },
-                                      domProps: { value: _vm.editedItem.telf },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "telf",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c(
-                                      "label",
-                                      { attrs: { for: "prestamo" } },
-                                      [_vm._v("Prestamo")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.prestamo,
-                                          expression: "editedItem.prestamo"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "number",
-                                        onkeyup: "calcular()",
-                                        id: "prestamo",
-                                        name: "prestamo",
-                                        placeholder: ""
-                                      },
-                                      domProps: {
-                                        value: _vm.editedItem.prestamo
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "prestamo",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.deuda,
-                                          expression: "editedItem.deuda"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "hidden",
-                                        id: "deuda",
-                                        name: "deuda",
-                                        placeholder: ""
-                                      },
-                                      domProps: { value: _vm.editedItem.deuda },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "deuda",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "interes" } }, [
-                                      _vm._v("Interes %")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.interes,
-                                          expression: "editedItem.interes"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "number",
-                                        onkeyup: "calcular()",
-                                        id: "interes",
-                                        name: "interes",
-                                        placeholder: ""
-                                      },
-                                      domProps: {
-                                        value: _vm.editedItem.interes
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "interes",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "" } }, [
-                                      _vm._v("Monto a Pagar")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.monto_a_apagar,
-                                          expression:
-                                            "editedItem.monto_a_apagar"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "text",
-                                        readonly: "",
-                                        name: "monto_a_apagar",
-                                        id: "total",
-                                        placeholder: ""
-                                      },
-                                      domProps: {
-                                        value: _vm.editedItem.monto_a_apagar
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "monto_a_apagar",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "" } }, [
-                                      _vm._v("Dias del prestamo")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.dias,
-                                          expression: "editedItem.dias"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "number",
-                                        onkeyup: "pago_por_dia()",
-                                        id: "dias",
-                                        name: "dias_para_pagar",
-                                        placeholder: ""
-                                      },
-                                      domProps: { value: _vm.editedItem.dias },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "dias",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "form-group col-md-6" },
-                                  [
-                                    _c("label", { attrs: { for: "" } }, [
-                                      _vm._v("Pago por dia")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.editedItem.pago_dia,
-                                          expression: "editedItem.pago_dia"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      attrs: {
-                                        type: "text",
-                                        readonly: "",
-                                        id: "totaldias",
-                                        name: "pago_dia",
-                                        placeholder: ""
-                                      },
-                                      domProps: {
-                                        value: _vm.editedItem.pago_dia
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.editedItem,
-                                            "pago_dia",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "form-group col-md-12" },
-                                [
+                            _c(
+                              "form",
+                              {
+                                staticClass: "ContactForm",
+                                attrs: { id: "ContactForm" },
+                                on: { submit: _vm.save }
+                              },
+                              [
+                                _c("div", { staticClass: "form-group" }, [
                                   _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        color: "green darken-1",
-                                        dark: ""
-                                      },
-                                      on: { click: _vm.save }
-                                    },
-                                    [_vm._v("Save")]
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c(
+                                        "label",
+                                        { attrs: { for: "nombre" } },
+                                        [_vm._v("Nombre")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.nombre,
+                                            expression: "editedItem.nombre"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          name: "nombre",
+                                          autofocus: "",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.nombre
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "nombre",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
                                   ),
                                   _vm._v(" "),
                                   _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        color: "red darken-1",
-                                        dark: ""
-                                      },
-                                      nativeOn: {
-                                        click: function($event) {
-                                          return _vm.close($event)
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c("label", { attrs: { for: "telf" } }, [
+                                        _vm._v("DNI")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.dni,
+                                            expression: "editedItem.dni"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          name: "dni",
+                                          placeholder: ""
+                                        },
+                                        domProps: { value: _vm.editedItem.dni },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "dni",
+                                              $event.target.value
+                                            )
+                                          }
                                         }
-                                      }
-                                    },
-                                    [_vm._v("Cancel")]
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c(
+                                        "label",
+                                        { attrs: { for: "direccion" } },
+                                        [_vm._v("Direccion")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.direccion,
+                                            expression: "editedItem.direccion"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          name: "direccion",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.direccion
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "direccion",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c("label", { attrs: { for: "fecha" } }, [
+                                        _vm._v("Fecha")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.fecha,
+                                            expression: "editedItem.fecha"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "date",
+                                          name: "fecha",
+                                          pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                                          value: "",
+                                          id: "fecha"
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.fecha
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "fecha",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c("label", { attrs: { for: "dni" } }, [
+                                        _vm._v("Telf")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.telf,
+                                            expression: "editedItem.telf"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          name: "telf",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.telf
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "telf",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c(
+                                        "label",
+                                        { attrs: { for: "prestamo" } },
+                                        [_vm._v("Prestamo")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.prestamo,
+                                            expression: "editedItem.prestamo"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "number",
+                                          onkeyup: "calcular()",
+                                          id: "prestamo",
+                                          name: "prestamo",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.prestamo
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "prestamo",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.deuda,
+                                            expression: "editedItem.deuda"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "hidden",
+                                          id: "deuda",
+                                          name: "deuda",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.deuda
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "deuda",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c(
+                                        "label",
+                                        { attrs: { for: "interes" } },
+                                        [_vm._v("Interes %")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.interes,
+                                            expression: "editedItem.interes"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "number",
+                                          onkeyup: "calcular()",
+                                          id: "interes",
+                                          name: "interes",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.interes
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "interes",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c("label", { attrs: { for: "" } }, [
+                                        _vm._v("Monto a Pagar")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value:
+                                              _vm.editedItem.monto_a_apagar,
+                                            expression:
+                                              "editedItem.monto_a_apagar"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          readonly: "",
+                                          name: "monto_a_apagar",
+                                          id: "total",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.monto_a_apagar
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "monto_a_apagar",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c("label", { attrs: { for: "" } }, [
+                                        _vm._v("Dias del prestamo")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.dias,
+                                            expression: "editedItem.dias"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "number",
+                                          onkeyup: "pago_por_dia()",
+                                          id: "dias",
+                                          name: "dias_para_pagar",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.dias
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "dias",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group col-md-6" },
+                                    [
+                                      _c("label", { attrs: { for: "" } }, [
+                                        _vm._v("Pago por dia")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.editedItem.pago_dia,
+                                            expression: "editedItem.pago_dia"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          readonly: "",
+                                          id: "totaldias",
+                                          name: "pago_dia",
+                                          placeholder: ""
+                                        },
+                                        domProps: {
+                                          value: _vm.editedItem.pago_dia
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.editedItem,
+                                              "pago_dia",
+                                              $event.target.value
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
                                   )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.agregado,
-                                    expression: "agregado"
-                                  }
-                                ],
-                                attrs: {
-                                  type: "hidden",
-                                  name: "agregado",
-                                  value: "user.name"
-                                },
-                                domProps: { value: _vm.agregado },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.agregado = $event.target.value
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.agregado_id,
-                                    expression: "agregado_id"
-                                  }
-                                ],
-                                attrs: {
-                                  type: "hidden",
-                                  name: "agregado_id",
-                                  value: "user.id"
-                                },
-                                domProps: { value: _vm.agregado_id },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.agregado_id = $event.target.value
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.editedItem.abono_id,
-                                    expression: "editedItem.abono_id"
-                                  }
-                                ],
-                                attrs: {
-                                  type: "hidden",
-                                  name: "abono_id",
-                                  value: "0"
-                                },
-                                domProps: { value: _vm.editedItem.abono_id },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.editedItem,
-                                      "abono_id",
-                                      $event.target.value
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-12" },
+                                  [
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "green darken-1",
+                                          dark: ""
+                                        },
+                                        on: { click: _vm.save }
+                                      },
+                                      [_vm._v("Save")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: {
+                                          color: "red darken-1",
+                                          dark: ""
+                                        },
+                                        nativeOn: {
+                                          click: function($event) {
+                                            return _vm.close($event)
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Cancel")]
                                     )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.agregado,
+                                      expression: "agregado"
+                                    }
+                                  ],
+                                  attrs: {
+                                    type: "text",
+                                    name: "agregado",
+                                    value: "user.name"
+                                  },
+                                  domProps: { value: _vm.agregado },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.agregado = $event.target.value
+                                    }
                                   }
-                                }
-                              })
-                            ])
+                                }),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.agregado_id,
+                                      expression: "agregado_id"
+                                    }
+                                  ],
+                                  attrs: {
+                                    type: "text",
+                                    name: "agregado_id",
+                                    value: "user.id"
+                                  },
+                                  domProps: { value: _vm.agregado_id },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.agregado_id = $event.target.value
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.abono_id,
+                                      expression: "abono_id"
+                                    }
+                                  ],
+                                  attrs: {
+                                    type: "text",
+                                    name: "abono_id",
+                                    value: "0"
+                                  },
+                                  domProps: { value: _vm.abono_id },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.abono_id = $event.target.value
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.csrf,
+                                      expression: "csrf"
+                                    }
+                                  ],
+                                  attrs: {
+                                    type: "text",
+                                    name: "_token",
+                                    value: "token"
+                                  },
+                                  domProps: { value: _vm.csrf },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.csrf = $event.target.value
+                                    }
+                                  }
+                                })
+                              ]
+                            )
                           ]
                         )
                       ])
