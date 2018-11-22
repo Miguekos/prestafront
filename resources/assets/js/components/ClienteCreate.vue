@@ -29,23 +29,23 @@
 
                             <div class="form-group col-md-6">
                                 <label for="prestamo">Prestamo</label>
-                                <input type="number" class="form-control" required onkeyup="calcular()" id="prestamo" name="prestamo" placeholder="">
-                                <input type="hidden" class="form-control" required id="deuda" name="deuda" placeholder="">
+                                <input type="number" class="form-control" required :value="prestamo" onkeyup="calcular()" id="prestamo" name="prestamo" placeholder="">
+                                <input type="hidden" class="form-control" required id="deuda" :value="deuda" name="deuda" placeholder="">
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="interes">Interes %</label>
-                                <input type="number" class="form-control" required onkeyup="calcular()" id=interes name="interes" placeholder="">
+                                <input type="number" class="form-control" required value="" onkeyup="calcular()" id="interes" name="interes" placeholder="">
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="">Monto a Pagar</label>
-                                <input type="text" class="form-control" required readonly name="monto_a_apagar" id="total" placeholder="">
+                                <input type="text" class="form-control" required value="" readonly name="monto_a_apagar" id="total" placeholder="">
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="">Dias del prestamo</label>
-                                <input type="number" class="form-control" required onkeyup="pago_por_dia()" id="dias" name="dias_para_pagar" placeholder="">
+                                <input type="number" class="form-control" required value="" onkeyup="pago_por_dia()" id="dias" name="dias_para_pagar" placeholder="">
                             </div>
 
                             <div class="form-group col-md-6">
@@ -79,12 +79,13 @@
 
 </div>
 </template>
-
 <script>
     export default {
         props: ['user','close','carga'],
         data() {
             return{
+                prestamo:10000 / 100,
+                deuda: 200,
                 loader: null,
                 agregado: "",
                 agregado_id: "",

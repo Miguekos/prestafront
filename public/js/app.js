@@ -84937,10 +84937,10 @@ var render = function() {
             [
               _c(
                 "v-alert",
-                { attrs: { value: true, color: "error", icon: "warning" } },
+                { attrs: { value: true, color: "red", icon: "warning" } },
                 [
                   _vm._v(
-                    "\n                Sorry, nothing to display here :(\n            "
+                    "\n                Lo siento no hay datos que cargar :(\n            "
                   )
                 ]
               )
@@ -86319,12 +86319,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['user', 'close', 'carga'],
     data: function data() {
         return {
+            prestamo: 10000 / 100,
+            deuda: 200,
             loader: null,
             agregado: "",
             agregado_id: "",
@@ -86393,7 +86394,54 @@ var render = function() {
         }
       },
       [
-        _vm._m(0),
+        _c("div", { staticClass: "form-group" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _vm._m(3),
+          _vm._v(" "),
+          _vm._m(4),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group col-md-6" }, [
+            _c("label", { attrs: { for: "prestamo" } }, [_vm._v("Prestamo")]),
+            _vm._v(" "),
+            _c("input", {
+              staticClass: "form-control",
+              attrs: {
+                type: "number",
+                required: "",
+                onkeyup: "calcular()",
+                id: "prestamo",
+                name: "prestamo",
+                placeholder: ""
+              },
+              domProps: { value: _vm.prestamo }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              staticClass: "form-control",
+              attrs: {
+                type: "hidden",
+                required: "",
+                id: "deuda",
+                name: "deuda",
+                placeholder: ""
+              },
+              domProps: { value: _vm.deuda }
+            })
+          ]),
+          _vm._v(" "),
+          _vm._m(5),
+          _vm._v(" "),
+          _vm._m(6),
+          _vm._v(" "),
+          _vm._m(7),
+          _vm._v(" "),
+          _vm._m(8)
+        ]),
         _vm._v(" "),
         _c(
           "div",
@@ -86467,159 +86515,165 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "nombre" } }, [_vm._v("Nombre")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            required: "",
-            autofocus: "",
-            name: "nombre",
-            placeholder: ""
-          }
-        })
-      ]),
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "nombre" } }, [_vm._v("Nombre")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "telf" } }, [_vm._v("DNI")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", required: "", name: "dni", placeholder: "" }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          required: "",
+          autofocus: "",
+          name: "nombre",
+          placeholder: ""
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "telf" } }, [_vm._v("DNI")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "direccion" } }, [_vm._v("Direccion")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            required: "",
-            name: "direccion",
-            placeholder: ""
-          }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "text", required: "", name: "dni", placeholder: "" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "direccion" } }, [_vm._v("Direccion")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "fecha" } }, [_vm._v("Fecha")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "date",
-            required: "",
-            name: "fecha",
-            value: "",
-            id: "fecha"
-          }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          required: "",
+          name: "direccion",
+          placeholder: ""
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "fecha" } }, [_vm._v("Fecha")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "dni" } }, [_vm._v("Telf")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", required: "", name: "telf", placeholder: "" }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "date",
+          required: "",
+          name: "fecha",
+          value: "",
+          id: "fecha"
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "dni" } }, [_vm._v("Telf")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "prestamo" } }, [_vm._v("Prestamo")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            required: "",
-            onkeyup: "calcular()",
-            id: "prestamo",
-            name: "prestamo",
-            placeholder: ""
-          }
-        }),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "hidden",
-            required: "",
-            id: "deuda",
-            name: "deuda",
-            placeholder: ""
-          }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "text", required: "", name: "telf", placeholder: "" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "interes" } }, [_vm._v("Interes %")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "interes" } }, [_vm._v("Interes %")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            required: "",
-            onkeyup: "calcular()",
-            id: "interes",
-            name: "interes",
-            placeholder: ""
-          }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "number",
+          required: "",
+          value: "",
+          onkeyup: "calcular()",
+          id: "interes",
+          name: "interes",
+          placeholder: ""
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Monto a Pagar")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "" } }, [_vm._v("Monto a Pagar")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            required: "",
-            readonly: "",
-            name: "monto_a_apagar",
-            id: "total",
-            placeholder: ""
-          }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          required: "",
+          value: "",
+          readonly: "",
+          name: "monto_a_apagar",
+          id: "total",
+          placeholder: ""
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Dias del prestamo")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "" } }, [_vm._v("Dias del prestamo")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            required: "",
-            onkeyup: "pago_por_dia()",
-            id: "dias",
-            name: "dias_para_pagar",
-            placeholder: ""
-          }
-        })
-      ]),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "number",
+          required: "",
+          value: "",
+          onkeyup: "pago_por_dia()",
+          id: "dias",
+          name: "dias_para_pagar",
+          placeholder: ""
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group col-md-6" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Pago por dia")]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "" } }, [_vm._v("Pago por dia")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            required: "",
-            readonly: "",
-            id: "totaldias",
-            name: "pago_dia",
-            placeholder: ""
-          }
-        })
-      ])
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          required: "",
+          readonly: "",
+          id: "totaldias",
+          name: "pago_dia",
+          placeholder: ""
+        }
+      })
     ])
   }
 ]

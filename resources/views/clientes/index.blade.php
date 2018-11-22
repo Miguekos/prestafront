@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@if(auth()->user()->user_id == 1)
     <div class="row">
         <div id="sombra" class="col-md-12">
             <div class="panel panel-default">
@@ -12,13 +13,14 @@
             </div>
         </div>
     </div>
-
-@if(auth()->user()->user_id == 1)
+    
     <div class="row">
         <div id="sombra" class="col-md-12">
             <div class="panel panel-default">
 
-                <cliente-sd :user="{{ auth()->user() }}"></cliente-sd>
+                <cliente-sd 
+                :user="{{ auth()->user() }}"
+                ></cliente-sd>
 
             </div>
         </div>

@@ -74,8 +74,8 @@
             </template>
 
             <template slot="no-data">
-                <v-alert :value="true" color="error" icon="warning">
-                    Sorry, nothing to display here :(
+                <v-alert :value="true" color="red" icon="warning">
+                    Lo siento no hay datos que cargar :(
                 </v-alert>
             </template>
         </v-data-table>
@@ -315,3 +315,4 @@
         }
     }
 </style>
+
