@@ -108,6 +108,12 @@ class ClienteController extends Controller
       return view('clientes.show',compact('clientes'));
     }
 
+    public function showapi($cliente)
+    {
+      $clientes = Cliente::findOrFail($cliente);
+      return $clientes;
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -3,6 +3,7 @@
 Route::prefix('v1.0')->group(function () {
 
     Route::get('clientes', 'ClienteController@indexapi');
+    Route::get('cliente/{cliente}', 'ClienteController@showapi');
     Route::get('usuario', 'UserController@indexapi');
     Route::post('cliente', 'ClienteController@storeapi');
     Route::put('cliente/{cliente}', 'ClienteController@updateapi');

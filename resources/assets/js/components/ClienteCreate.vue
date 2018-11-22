@@ -1,8 +1,6 @@
 <template>
-<div class="container-fluid">
-    <div class="row">
-        <div id="sombra" class="col-md-12">
-            <form id="ContactForm" @submit="sendForm">
+<div>
+            <form id="ContactForm" @submit.prevent="sendForm">
                         <div class="form-group">
                             <div class="form-group col-md-6">
                                 <label for="nombre">Nombre</label>
@@ -63,23 +61,74 @@
                                     :loading="loading"
                                     :disabled="loading"
                                     color="green"
-                                    @click="loader = 'loading', preciono()"
+                                    
                                     type="submit"
-                                    block
                                     black
+                                    small
                             >
                                 Guardar
                             </v-btn>
+                            <v-btn black small color="red darken-1" dark @click.native="close">Cancel</v-btn>
                         </div>
-                        <input type="hidden" name="agregado" value="">
-                        <input type="hidden" name="agregado_id" value="">
-                        <input type="hidden" name="abono_id" value="0">
+                        <input type="hidden" name="agregado" :value="user.name">
+                        <input type="hidden" name="agregado_id" :value="user.id">
+                        <input type="hidden" name="abono_id" :value="0">
+                        <input type="hidden" name="_token" :value="csrf">
                     </form>
 
-        </div>
-    </div>
+
 </div>
 </template>
+
+<script>
+    export default {
+        props: ['user','close','carga'],
+        data() {
+            return{
+                loader: null,
+                agregado: "",
+                agregado_id: "",
+                abono_id: "",
+                loading: false,
+                loading2: false,
+                loading3: false,
+                loading4: false,
+                formType: true,
+//                serverResponse: false,
+                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }
+        },
+        watch: {
+            loader () {
+                const l = this.loader
+                this[l] = !this[l]
+                setTimeout(() => (this[l] = false), 3000)
+                this.loader = null
+            }
+        },
+        methods: {
+            sendForm (e) {
+                let form = document.getElementById('ContactForm'),
+                    formData = new FormData(form)
+
+                axios.post('/cliente',formData)
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        alert("Surgio un error al guardar tu cliente");
+                    })
+                    this.close();
+                    this.carga();
+            },
+            preciono: function () {
+                console.log("preciono el boton")
+            }
+        }
+    }
+</script>
+
 
 <style>
     .custom-loader {
@@ -119,55 +168,3 @@
         }
     }
 </style>
-
-<script>
-    export default{
-        data() {
-            return{
-                loader: null,
-                loading: false,
-                loading2: false,
-                loading3: false,
-                loading4: false,
-                formType: true,
-//                serverResponse: false,
-                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            }
-        },
-        watch: {
-            loader () {
-                const l = this.loader
-                this[l] = !this[l]
-
-                setTimeout(() => (this[l] = false), 3000)
-
-                this.loader = null
-            }
-        },
-        methods: {
-            sendForm (e) {
-                console.log("aqui");
-//                alert('Enviando Form')
-//                this.snackbar= true
-                let form = document.getElementById('ContactForm'),
-                    formData = new FormData(form)
-
-                axios.post('/cliente',formData)
-                    .then(response => {
-                        console.log(response)
-//                        this.snackbar = true
-//                        this.message.serverResponse = response.data
-//                        this.serverResponse = true
-                    })
-                    .catch(error => {
-                        console.log(error)
-//                        this.message.serverResponse = error
-//                        this.serverResponse = false
-                    })
-            },
-            preciono: function () {
-                console.log("preciono el boton")
-            }
-        }
-    }
-</script>

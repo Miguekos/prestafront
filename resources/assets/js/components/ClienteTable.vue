@@ -1,142 +1,60 @@
 <template>
     <div>
         <v-toolbar flat color="white">
-            <v-toolbar-title>Clientes {{ user.name }} </v-toolbar-title>
-            <!-- <v-text-field label="Regular"></v-text-field> -->
-            <!-- <v-btn @click="createdFormData">create</v-btn> -->
+            <v-toolbar-title>Clientes </v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-text-field append-icon="search" label="Buscar" single-line hide-details v-model="search"></v-text-field>
             <v-spacer></v-spacer>
+            <!-- Dialog Para Crear Cliente -->
             <v-dialog v-model="dialog" max-width="700px">
                 <v-btn slot="activator" color="green" fab small dark class="mb-2">
                     <v-icon>add</v-icon>
                 </v-btn>
-
                 <v-card>
                     <v-card-title>
                         <span class="headline">{{ formTitle }}</span>
                     </v-card-title>
-                    <!-- <cliente-crear></cliente-crear> -->
                     <template>
                         <div class="container-fluid">
                             <div class="row">
-                                <div id="sombra" class="col-md-12">
-                                    <form id="ContactForm" class="ContactForm" @submit="save">
-
-                                        <div class="form-group">
-                                            <div class="form-group col-md-6">
-                                                <label for="nombre">Nombre</label>
-                                                <input type="text" name="nombre" class="form-control" v-model="editedItem.nombre"
-                                                    autofocus placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="telf">DNI</label>
-                                                <input type="text" class="form-control" v-model="editedItem.dni" name="dni"
-                                                    placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="direccion">Direccion</label>
-                                                <input type="text" class="form-control" v-model="editedItem.direccion"
-                                                    name="direccion" placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="fecha">Fecha</label>
-                                                <input type="date" class="form-control" v-model="editedItem.fecha" name="fecha"
-                                                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="" id="fecha">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="dni">Telf</label>
-                                                <input type="text" class="form-control" v-model="editedItem.telf" name="telf"
-                                                    placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="prestamo">Prestamo</label>
-                                                <input type="number" class="form-control" v-model="editedItem.prestamo"
-                                                    onkeyup="calcular()" id="prestamo" name="prestamo" placeholder="">
-                                                <input type="hidden" class="form-control" v-model="editedItem.deuda" id="deuda"
-                                                    name="deuda" placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="interes">Interes %</label>
-                                                <input type="number" class="form-control" v-model="editedItem.interes"
-                                                    onkeyup="calcular()" id=interes name="interes" placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="">Monto a Pagar</label>
-                                                <input type="text" class="form-control" v-model="editedItem.monto_a_apagar"
-                                                    readonly name="monto_a_apagar" id="total" placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="">Dias del prestamo</label>
-                                                <input type="number" class="form-control" v-model="editedItem.dias"
-                                                    onkeyup="pago_por_dia()" id="dias" name="dias_para_pagar"
-                                                    placeholder="">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="">Pago por dia</label>
-                                                <input type="text" class="form-control" readonly id="totaldias" v-model="editedItem.pago_dia"
-                                                    name="pago_dia" placeholder="">
-
-                                            </div>
-
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <!--<input  class="btn btn-success btn-block" value="Guardar">-->
-                                            <!--<v-btn type="submit" block color="green" dark>Guardar</v-btn>-->
-                                            <!-- <v-btn
-                                    :loading="loading"
-                                    :disabled="loading"
-                                    color="green"
-                                    @click="loader = 'loading'"
-                                    type="submit"
-                                    block
-                                    black
-                                    dark
-                            >
-                                Guardar
-                            </v-btn> -->
-
-                                            <v-btn color="green darken-1" dark @click="save">Save</v-btn>
-                                            <v-btn color="red darken-1" dark @click.native="close">Cancel</v-btn>
-
-                                            <!-- <v-btn @click="createdFormData">create</v-btn> -->
-
-                                        </div>
-
-                                        <input type="hidden" name="agregado" v-model="agregado" value="user.name">
-                                        <input type="hidden" name="agregado_id" v-model="agregado_id" value="user.id">
-                                        <input type="hidden" name="abono_id" v-model="abono_id" value="0">
-                                        <input type="hidden" name="_token" v-model="csrf" value="token">
-
-                                    </form>
-
+                                <div class="col-md-12">
+                                    <cliente-crear 
+                                    :user="user" 
+                                    :close="close" 
+                                    :carga="getDataCliente"
+                                    ></cliente-crear>
                                 </div>
                             </div>
                         </div>
                     </template>
-
-                    <!--<v-card-text>-->
-
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-
-                    </v-card-actions>
                 </v-card>
             </v-dialog>
-
+            <!-- Dialog para editar -->
+            <v-dialog v-model="dialog1" max-width="700px">
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                    </v-card-title>
+                    <template>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <cliente-edit 
+                                    :cliente="editCliente" 
+                                    :user="user" 
+                                    :close="close" 
+                                    :carga="getDataCliente"
+                                    ></cliente-edit>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </v-card>
+            </v-dialog>
         </v-toolbar>
 
-        <v-data-table :headers="headers" :items="desserts" class="elevation-1" :search="search" :rows-per-page-items="[5,10,20]">
+        <v-data-table must-sort :pagination.sync="pagination" :headers="headers" :items="desserts" class="elevation-1" :search="search" :rows-per-page-items="[5,10,20]">
+            
 
             <template slot="items" slot-scope="props">
                 <td>{{ props.item.id }}</td>
@@ -160,9 +78,6 @@
                     Sorry, nothing to display here :(
                 </v-alert>
             </template>
-            <!--<template slot="no-data">-->
-            <!--<v-btn color="primary" @click="getDataCliente">Reset</v-btn>-->
-            <!--</template>-->
         </v-data-table>
         <!-- <pre>{{ $data }}</pre> -->
     </div>
@@ -173,6 +88,7 @@
         props: ['user'],
         data: () => ({
             errors: [],
+            editCliente: "",
             agregado: "",
             agregado_id: "",
             abono_id: "",
@@ -181,12 +97,16 @@
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             loading: false,
             dialog: false,
+            dialog1: false,
             search: "",
+            pagination: {
+                sortBy: 'id'
+            },
             headers: [{
                     text: '#',
                     align: 'left',
                     value: 'id',
-                    sortable: true
+                    
                 },
                 {
                     text: 'Nombre',
@@ -242,17 +162,10 @@
                 "fecha_limite": null,
                 "comentario": null,
             },
-            props: {
-                // user_name: String,
-                // likes: Number,
-                // isPublished: Boolean,
-                // commentIds: Array,
-                // author: Object
-                }
         }),
 
         computed: {
-            getPr () {
+            getPr() {
                 return this.user.name;
             },
             formTitle() {
@@ -263,30 +176,25 @@
             }
         },
         mounted() {
-            const tidValue = this.user.name // get the value of props you've passed
+            // Cuando carga la pagina pasa los valores del props a las variables en data que pasan por : a los input
             this.agregado = this.user.id
             this.agregado_id = this.user.id
             this.abono_id = 0
-            console.log(tidValue) // check if it is getting the right value.
         },
         watch: {
             dialog(val) {
                 val || this.close()
             }
         },
-
         created() {
-            //      this.initialize()
+            // Carga lsita de clientes despues de cargar la pagina
             this.getDataCliente();
-
         },
         methods: {
-            getDataCliente: function (n) {
-                //  this.dialog = true;
+            getDataCliente() {
                 axios
                     .get(`/v1.0/clientes`)
                     .then(response => {
-                        // JSON responses are automatically parsed.
                         this.desserts = response.data.cliente;
                         console.log(response.data.cliente);
                     })
@@ -295,10 +203,19 @@
                     });
             },
             editItem(item) {
-                this.editedIndex = this.desserts.indexOf(item)
-                this.editedItem = Object.assign({}, item)
-                this.dialog = true
+                // this.editedIndex = this.desserts.indexOf(item)
+                // this.editedItem = Object.assign({}, item)
+                this.dialog1 = true
                 this.idedit = item.id
+                axios
+                    .get(`/v1.0/cliente/${item.id}`)
+                    .then(response => {
+                        this.editCliente = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        this.errors.push(e);
+                    });
             },
             deleteItem(item) {
                 const index = this.desserts.indexOf(item)
@@ -320,86 +237,15 @@
                         //                        this.errors.push(e);
                     });
             },
-
             close() {
+                this.dialog1 = false
                 this.dialog = false
-                setTimeout(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
-                    this.editedIndex = -1
-                }, 300)
-            },
-            save() {
-                if (this.editedIndex > -1) {
-                    //   edit
-                    // Object.assign(this.desserts[this.editedIndex], this.editedItem)
-                    console.log(this.editedItem);
-                    axios({
-                            method: 'put',
-                            url: `/v1.0/cliente/${this.idedit}`,
-                            data: this.editedItem,
-                        })
-                        .then(function (response) {
-                            response.data
-                            console.log(response.data);
-                            
-                        });
+                console.log("entro seguo que si");
 
-                } else {
-                    // nuevo
-                    // console.log(this.editedItem);
-                    // this.editedItem = Object.assign({}, this.agregar)
-                    console.log(this.editedItem);
-                    let form = document.getElementById('ContactForm'),
-                        formData = new FormData(form)
-                        console.log(formData);
-
-                        axios({
-                            url: '/v1.0/cliente/',
-                            method: 'post',
-                            headers: {
-                            'X-CSRF-Token': $('meta[name=_token]').attr('content')
-                            },
-                            data: formData
-                        })
-                        .then(function (response) {
-                            response.data
-                            console.log(response.data);
-                        });
-                        this.getDataCliente();
-                        this.close();
-                    // const nuevo = axios.create({
-                    //     method: 'post',
-                    //     baseURL: '/v1.0/cliente/',
-                    //     timeout: 1000,
-                    //     headers: {
-                    //         'X-CSRF-Token': $('meta[name=_token]').attr('content')
-                    //     },
-                    //     data: formData
-                    // });
-
-                    // console.log(nuevo.data);
-                    
-                    
-                    // axios.post(`/v1.0/cliente/`, formData)
-                    //     .then(response => {
-                    //         console.log(response)
-                    //     })
-                    //     .catch(error => {
-                    //         console.log(error)
-                    //     })
-
-                    // axios({
-                    //         method: 'post',
-                    //         url: `/v1.0/cliente`,
-                    //         data: this.editedItem,
-                    //     })
-                    //     .then(function (response) {
-                    //         response.data
-                    //         console.log(response.data);
-                    //         this.getDataCliente();
-                    //     });
-                }
-                // this.close()
+                // setTimeout(() => {
+                // this.editedItem = Object.assign({}, this.defaultItem)
+                // this.editedIndex = -1
+                // }, 300)
             },
             deleteCliente: function (id) {
                 console.log("entro a al borrar");
